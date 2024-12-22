@@ -1,0 +1,166 @@
+<div *ngIf="!isAdmin">
+    <h2>Admin Login</h2>
+    <form #loginForm="ngForm" (ngSubmit)="login()" novalidate>
+      <div>
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          #usernameField="ngModel"
+          required
+        />
+        <div *ngIf="usernameField.invalid && usernameField.touched" class="error">
+          Username is required.
+        </div>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          #passwordField="ngModel"
+          required
+        />
+        <div *ngIf="passwordField.invalid && passwordField.touched" class="error">
+          Password is required.
+        </div>
+      </div>
+      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    </form>
+  </div>
+  
+  <div *ngIf="isAdmin" class="admin-panel">
+    <header class="admin-header">
+      <h2>Admin Panel</h2>
+      <button (click)="logout()" class="logout-btn">Logout</button>
+    </header>
+  
+    <section>
+      <button (click)="openAddDialog()">Add</button>
+    </section>
+  
+    <h3>Ads List</h3>
+    <ul>
+      <li *ngFor="let ad of ads">
+        <img [src]="ad.pictures[0]" alt="Ad Image" width="100">
+        <span>{{ ad.id }}: {{ ad.title }}: {{ ad.description }}</span>
+        <button (click)="openUpdateDialog(ad)">Update</button>
+        <button (click)="deleteAd(ad.id)">Delete</button>
+      </li>
+    </ul>
+  
+    <!-- Add Ad Dialog -->
+    <div class="dialog-overlay" *ngIf="showAddDialog">
+      <div class="dialog-box">
+        <h3>Add New Ad</h3>
+        <form (ngSubmit)="addAd()" #addAdForm="ngForm">
+          <div>
+            <label for="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              [(ngModel)]="currentAd.title"
+              name="title"
+              required
+              #titleField="ngModel"
+            />
+          </div>
+          <div>
+            <label for="description">Description:</label>
+            <input
+              type="text"
+              id="description"
+              [(ngModel)]="currentAd.description"
+              name="description"
+              required
+              #descriptionField="ngModel"
+            />
+          </div>
+  
+          <div>
+            <label for="pictures">Select Pictures:</label>
+            <input
+              type="file"
+              id="pictures"
+              (change)="onFileChange($event)"
+              multiple
+            />
+          </div>
+  
+          <div *ngIf="currentAd.pictures.length > 0">
+            <h4>Selected Pictures:</h4>
+            <ul>
+              <li *ngFor="let pic of currentAd.pictures">
+                <img [src]="pic" alt="Selected Image" width="100" />
+              </li>
+            </ul>
+          </div>
+  
+          <div class="dialog-actions">
+            <button type="submit" [disabled]="addAdForm.invalid">Submit</button>
+            <button type="button" (click)="closeAddDialog()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Update Ad Dialog -->
+    <div class="dialog-overlay" *ngIf="showUpdateDialog">
+      <div class="dialog-box">
+        <h3>Update Ad</h3>
+        <form (ngSubmit)="updateAd()" #updateAdForm="ngForm">
+          <div>
+            <label for="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              [(ngModel)]="currentAd.title"
+              name="title"
+              required
+              #titleField="ngModel"
+            />
+          </div>
+          <div>
+            <label for="description">Description:</label>
+            <input
+              type="text"
+              id="description"
+              [(ngModel)]="currentAd.description"
+              name="description"
+              required
+              #descriptionField="ngModel"
+            />
+          </div>
+  
+          <div>
+            <label for="pictures">Select Pictures:</label>
+            <input
+              type="file"
+              id="pictures"
+              (change)="onFileChange($event)"
+              multiple
+            />
+          </div>
+  
+          <div *ngIf="currentAd.pictures.length > 0">
+            <h4>Selected Pictures:</h4>
+            <ul>
+              <li *ngFor="let pic of currentAd.pictures">
+                <img [src]="pic" alt="Selected Image" width="100" />
+              </li>
+            </ul>
+          </div>
+  
+          <div class="dialog-actions">
+            <button type="submit" [disabled]="updateAdForm.invalid">Update</button>
+            <button type="button" (click)="closeUpdateDialog()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
